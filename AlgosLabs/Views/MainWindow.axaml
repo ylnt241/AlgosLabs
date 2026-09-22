@@ -4,64 +4,152 @@
         x:Class="AlgosLabs.Views.MainWindow"
         x:DataType="vm:MainViewModel"
         Title="Бенчмарк алгоритмов"
-        Width="550" Height="450"
+        Width="650" Height="550"
+        MinWidth="500" MinHeight="450"
         WindowStartupLocation="CenterScreen">
 
     <Design.DataContext>
         <vm:MainViewModel />
     </Design.DataContext>
 
-    <Grid RowDefinitions="Auto, *, Auto" Margin="20">
+    <Grid RowDefinitions="*, Auto" Margin="16">
+        
+        <!-- Вкладки режимов тестирования -->
+        <TabControl x:Name="MainTabControl" Grid.Row="0">
+            
+            <TabItem Header="Основные бенчмарки">
+                <Grid RowDefinitions="Auto, *" Margin="0,12,0,0">
+                    
+                    <!-- Карточка параметров N -->
+                    <Border Grid.Row="0" 
+                            Background="{DynamicResource SystemRegionBrush}" 
+                            Theme="{StaticResource CardBorderTheme}"
+                            CornerRadius="8" Padding="12" Margin="0,0,0,12">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="Параметры входных данных" FontWeight="SemiBold" FontSize="14" />
+                            
+                            <Grid ColumnDefinitions="*, *" RowDefinitions="Auto" Margin="0,4,0,0">
+                                <StackPanel Grid.Column="0" Margin="0,0,6,0" Spacing="4">
+                                    <TextBlock Text="Max N:" FontSize="12" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                                    <NumericUpDown Value="{Binding MaxN}" Minimum="10" Maximum="1000000" Increment="500" HorizontalAlignment="Stretch" />
+                                </StackPanel>
 
-        <!-- Параметры эксперимента -->
-        <Border Grid.Row="0" Background="#F4F4F4" Padding="15" CornerRadius="8" Margin="0,0,0,15">
-            <StackPanel Spacing="10">
-                <TextBlock Text="Параметры эксперимента" FontWeight="Bold" FontSize="16" />
-                <Grid ColumnDefinitions="*, *" RowDefinitions="Auto, Auto" Margin="0,5,0,0">
-                    <StackPanel Grid.Row="0" Grid.Column="0" Margin="5">
-                        <TextBlock Text="Max N:" VerticalAlignment="Center" />
-                        <NumericUpDown Value="{Binding MaxN}" Minimum="10" Maximum="1000000" Increment="500" />
-                    </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="6,0,0,0" Spacing="4">
+                                    <TextBlock Text="Шаг N:" FontSize="12" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                                    <NumericUpDown Value="{Binding StepN}" Minimum="1" Maximum="10000" Increment="50" HorizontalAlignment="Stretch" />
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
 
-                    <StackPanel Grid.Row="0" Grid.Column="1" Margin="5">
-                        <TextBlock Text="Шаг N:" VerticalAlignment="Center" />
-                        <NumericUpDown Value="{Binding StepN}" Minimum="1" Maximum="10000" Increment="50" />
-                    </StackPanel>
+                    <!-- Список выбора алгоритмов -->
+                    <Border Grid.Row="1" 
+                            BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}" 
+                            BorderThickness="1" CornerRadius="8" Padding="12">
+                        <DockPanel>
+                            <TextBlock Text="Выберите алгоритмы для сравнения:"
+                                       DockPanel.Dock="Top"
+                                       FontWeight="SemiBold"
+                                       Margin="0,0,0,8" />
+
+                            <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+                                <ItemsControl ItemsSource="{Binding AvailableAlgorithms}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border CornerRadius="4" Padding="6,4" Margin="0,2"
+                                                    Background="{DynamicResource SystemControlBackgroundAltHighBrush}">
+                                                <CheckBox IsChecked="{Binding IsSelected}"
+                                                          Content="{Binding Algorithm.Name}"
+                                                          HorizontalAlignment="Stretch" />
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </DockPanel>
+                    </Border>
                 </Grid>
-            </StackPanel>
-        </Border>
+            </TabItem>
 
-        <!-- Автоматически собранный список алгоритмов (CheckBox) -->
-        <Border Grid.Row="1" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="8" Padding="10">
-            <DockPanel>
-                <TextBlock Text="Выберите алгоритмы для сравнения:"
-                           DockPanel.Dock="Top"
-                           FontWeight="SemiBold"
-                           Margin="5,0,0,10" />
+            <!-- Вкладка умножения матриц -->
+<TabItem Header="Матрицы">
+    <ScrollViewer Margin="0,12,0,0">
+        <StackPanel Spacing="12">
+            
+            <!-- Блок оси N -->
+            <Border Background="{DynamicResource SystemRegionBrush}" 
+                    CornerRadius="8" Padding="12">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Параметры строки (Ось N)" FontWeight="SemiBold" FontSize="14"/>
+                    <Grid ColumnDefinitions="*, *, *" ColumnSpacing="8">
+                        <StackPanel Grid.Column="0" Spacing="4">
+                            <TextBlock Text="Start N:" FontSize="12" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
+                            <NumericUpDown Value="{Binding StartN}" Minimum="10" Increment="10"/>
+                        </StackPanel>
 
-                <ScrollViewer>
-                    <ItemsControl ItemsSource="{Binding AvailableAlgorithms}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <CheckBox IsChecked="{Binding IsSelected}"
-                                          Content="{Binding Algorithm.Name}"
-                                          Margin="5,2" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
-            </DockPanel>
-        </Border>
+                        <StackPanel Grid.Column="1" Spacing="4">
+                            <TextBlock Text="Max N:" FontSize="12" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
+                            <NumericUpDown Value="{Binding MaxN}" Minimum="10" Increment="50"/>
+                        </StackPanel>
 
-        <!-- Панель управления и кнопка запуска -->
-        <StackPanel Grid.Row="2" Margin="0,15,0,0" Spacing="10">
+                        <StackPanel Grid.Column="2" Spacing="4">
+                            <TextBlock Text="Step N:" FontSize="12" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
+                            <NumericUpDown Value="{Binding StepN}" Minimum="1" Increment="10"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Блок оси M -->
+            <Border Background="{DynamicResource SystemRegionBrush}" 
+                    CornerRadius="8" Padding="12">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Параметры столбцов (Ось M)" FontWeight="SemiBold" FontSize="14"/>
+                    <Grid ColumnDefinitions="*, *, *" ColumnSpacing="8">
+                        <StackPanel Grid.Column="0" Spacing="4">
+                            <TextBlock Text="Start M:" FontSize="12" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
+                            <NumericUpDown Value="{Binding StartM}" Minimum="10" Increment="10"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Spacing="4">
+                            <TextBlock Text="Max M:" FontSize="12" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
+                            <NumericUpDown Value="{Binding MaxM}" Minimum="10" Increment="50"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2" Spacing="4">
+                            <TextBlock Text="Step M:" FontSize="12" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
+                            <NumericUpDown Value="{Binding StepM}" Minimum="1" Increment="10"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Кнопка 3D запуска -->
+            <Button Content="Построить график"
+                    Command="{Binding RunMatrix3DBenchmarkCommand}"
+                    IsEnabled="{Binding !IsBusy}"
+                    Classes="accent"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Padding="10"/>
+        </StackPanel>
+    </ScrollViewer>
+</TabItem>
+            
+        </TabControl>
+
+        <!-- Общая нижняя панель -->
+        <StackPanel Grid.Row="1" Margin="0,12,0,0" Spacing="8">
             <ProgressBar IsIndeterminate="True"
                          IsVisible="{Binding IsBusy}"
-                         Height="4" />
+                         Height="3" 
+                         HorizontalAlignment="Stretch"/>
 
             <Button Command="{Binding RunComparisonCommand}"
-                    Content="📊 Построить графики"
+                    Content="Построить графики"
+                    Classes="accent"
                     IsEnabled="{Binding !IsBusy}"
+                    IsVisible="{Binding #MainTabControl.SelectedIndex, Converter={x:Static ObjectConverters.Equal}, ConverterParameter=0}"
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
                     Padding="10" />

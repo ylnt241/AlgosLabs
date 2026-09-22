@@ -12,37 +12,41 @@ namespace AlgosLabs.ViewModels;
 
 public partial class MainViewModel : ObservableObject
 {
-    // Используем правильное имя универсального сервиса
     private readonly UniversalBenchmarkService _benchmarkService = new();
     private readonly AlgorithmScanner _scanner = new();
+
     [ObservableProperty] private int _algorithmStep = 1;
     [ObservableProperty] private bool _isBusy;
 
-    [ObservableProperty] private int _maxN = 5000;
-    [ObservableProperty] private int _stepN = 250;
+    // --- Параметры для обычных 2D бенчмарков ---
+    [ObservableProperty] private int _maxN = 1000;
+    [ObservableProperty] private int _stepN = 100;
+
+    // --- Добавляем новые свойства для 3D бенчмарка Матриц (N x M) ---
+    [ObservableProperty] private int _startN = 50;
+    [ObservableProperty] private int _startM = 50;
+    [ObservableProperty] private int _maxM = 500;
+    [ObservableProperty] private int _stepM = 50;
 
     public MainViewModel()
     {
         LoadAlgorithmsAutomatically();
     }
 
-    // Свойство должно быть публичным, так как к нему привязывается View
     public ObservableCollection<AlgorithmSelectionViewModel> AvailableAlgorithms { get; } = new();
 
     private void LoadAlgorithmsAutomatically()
     {
         AvailableAlgorithms.Clear();
-
-        // Сканируем проект и автоматически находим все реализованные алгоритмы
         var foundAlgorithms = _scanner.FindAllAlgorithms();
 
-        foreach (var algo in foundAlgorithms) AvailableAlgorithms.Add(new AlgorithmSelectionViewModel(algo));
+        foreach (var algo in foundAlgorithms) 
+            AvailableAlgorithms.Add(new AlgorithmSelectionViewModel(algo));
     }
 
     [RelayCommand]
     private async Task RunComparisonAsync()
     {
-        // Явно указываем тип в Select, чтобы устранить ошибку вывода типов Enumerable.Select
         var selected = AvailableAlgorithms
             .Where(x => x.IsSelected)
             .Select<AlgorithmSelectionViewModel, IAlgorithm>(x => x.Algorithm)
@@ -65,10 +69,7 @@ public partial class MainViewModel : ObservableObject
                 AlgorithmStep
             );
 
-            // Определяем теоретическую сложность (например, Linear для O(N) или Constant для O(1))
-            // Можно автоматически выбирать тип на основе алгоритма
             var targetComplexity = ComplexityType.Linear;
-
             var approxResult = approxService.Fit(points, targetComplexity);
 
             allResults.SeriesList.Add(new SeriesData(algo.Name, points, approxResult));
@@ -76,9 +77,27 @@ public partial class MainViewModel : ObservableObject
 
         IsBusy = false;
 
-        // Открываем отдельное окно для отображения графиков ScottPlot
         var chartWindow = new ChartWindow();
         chartWindow.DataContext = new ChartWindowViewModel(allResults);
         chartWindow.Show();
+    }
+
+    [RelayCommand]
+    private async Task RunMatrix3DBenchmarkAsync()
+    {
+        IsBusy = true;
+
+        var heatmapData = await Task.Run(() => 
+            MatrixBenchmarkService.RunBenchmarkGrid(
+                StartN, MaxN, StepN,
+                StartM, MaxM, StepM
+            )
+        );
+
+        IsBusy = false;
+
+        var heatmapWindow = new HeatmapWindow();
+        heatmapWindow.LoadDataAndPlot(heatmapData);
+        heatmapWindow.Show();
     }
 }
