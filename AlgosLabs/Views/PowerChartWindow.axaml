@@ -1,0 +1,9 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ScottPlot="clr-namespace:ScottPlot.Avalonia;assembly=ScottPlot.Avalonia"
+        x:Class="AlgosLabs.Views.PowerChartWindow"
+        Title="Анализ сложностей алгоритмов возведения в степень"
+        Width="800" Height="600"
+        WindowStartupLocation="CenterOwner">
+    <ScottPlot:AvaPlot x:Name="PowerPlot" />
+</Window>
