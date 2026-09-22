@@ -92,7 +92,7 @@ public class UniversalBenchmarkService
         var generateMethod = algorithm.GetType().GetMethod("Generate", new[] { typeof(int) });
     
         // Количество итераций для сглаживания системного шума
-        int innerLoops = 10;
+        int innerLoops = 2;
         var runs = new double[5];
 
         for (var run = 0; run < 5; run++)
