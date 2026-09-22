@@ -32,7 +32,7 @@ public class UniversalBenchmarkService
             .GetMethod(nameof(RunBenchmarkAsync))!
             .MakeGenericMethod(dataType);
 
-        // 3. Вызываем с 5 параметрами (без стороннего генератора!)
+        // 3. Вызываем с 5 параметрами
         var task = (Task<List<BenchmarkResultPoint>>)method.Invoke(this, new object?[]
         {
             algorithm,
@@ -55,6 +55,8 @@ public class UniversalBenchmarkService
         int algorithmStep,
         IProgress<double>? progress = null)
     {
+        WarmupAlgorithm(algorithm, algorithmStep);
+        
         var results = new List<BenchmarkResultPoint>();
         var totalSteps = (maxN - 1) / stepN + 1;
         var currentStepCount = 0;
@@ -75,7 +77,27 @@ public class UniversalBenchmarkService
 
         return results;
     }
+    private static void WarmupAlgorithm<TData>(IAlgorithm<TData> algorithm, int algorithmStep)
+    {
+        try
+        {
+            // Генерация минимального набора данных и 3-5 холостых прогонов
+            TData warmupData = algorithm.Generate(10);
+            for (int i = 0; i < 5; i++)
+            {
+                algorithm.Execute(warmupData, algorithmStep);
+            }
 
+            // Очищаем мусор после прогрева
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+        }
+        catch
+        {
+            // Игнорируем возможные ошибки прогрева
+        }
+    }
     private async Task<double?> GetFromCacheAsync(string cacheKey)
     {
         using var db = new AppDbContext();
@@ -92,7 +114,7 @@ public class UniversalBenchmarkService
         var generateMethod = algorithm.GetType().GetMethod("Generate", new[] { typeof(int) });
     
         // Количество итераций для сглаживания системного шума
-        int innerLoops = 2;
+        int innerLoops = 5;
         var runs = new double[5];
 
         for (var run = 0; run < 5; run++)
@@ -100,7 +122,6 @@ public class UniversalBenchmarkService
 // Вызываем Generate(n) с текущим N, либо дефолтный Generate()
             TData inputData = algorithm.Generate(n);
 // Прогрев JIT (Warmup)
-            algorithm.Execute(inputData, algorithmStep);
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();

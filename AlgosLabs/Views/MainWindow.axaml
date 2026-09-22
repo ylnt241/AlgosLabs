@@ -70,7 +70,7 @@
                         </DockPanel>
                     </Border>
                     <Button Grid.Row="2"
-                            Command="{Binding RunComparisonCommand}"
+                            Command="{Binding RunVectorComparisonCommand}"
                             Content="Построить графики"
                             Classes="accent"
                             IsEnabled="{Binding !IsBusy}"
@@ -187,6 +187,68 @@
         </StackPanel>
     </Border>
 </TabItem>
+                        <!-- 4. Алгоритмы из индивидуального задания -->
+            <TabItem Header="Индивидуальное задание">
+                <Grid RowDefinitions="Auto, *, Auto" Margin="0,12,0,0">
+                    
+                    <!-- Карточка параметров N -->
+                    <Border Grid.Row="0" 
+                            Background="{DynamicResource SystemRegionBrush}" 
+                            Theme="{StaticResource CardBorderTheme}"
+                            CornerRadius="8" Padding="12" Margin="0,0,0,12">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="Параметры входных данных" FontWeight="SemiBold" FontSize="14" />
+                            
+                            <Grid ColumnDefinitions="*, *" RowDefinitions="Auto" Margin="0,4,0,0">
+                                <StackPanel Grid.Column="0" Margin="0,0,6,0" Spacing="4">
+                                    <TextBlock Text="Max N:" FontSize="12" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                                    <NumericUpDown Value="{Binding MaxN}" Minimum="10" Maximum="1000000" Increment="500" HorizontalAlignment="Stretch" />
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="1" Margin="6,0,0,0" Spacing="4">
+                                    <TextBlock Text="Шаг N:" FontSize="12" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                                    <NumericUpDown Value="{Binding StepN}" Minimum="1" Maximum="10000" Increment="50" HorizontalAlignment="Stretch" />
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Список выбора алгоритмов -->
+                    <Border Grid.Row="1" 
+                            BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}" 
+                            BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,0,0,12">
+                        <DockPanel>
+                            <TextBlock Text="Выберите алгоритмы для сравнения:"
+                                       DockPanel.Dock="Top"
+                                       FontWeight="SemiBold"
+                                       Margin="0,0,0,8" />
+
+                            <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+                                <ItemsControl ItemsSource="{Binding IndividualAlgorithms}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border CornerRadius="4" Padding="6,4" Margin="0,2"
+                                                    Background="{DynamicResource SystemControlBackgroundAltHighBrush}">
+                                                <CheckBox IsChecked="{Binding IsSelected}"
+                                                          Content="{Binding Algorithm.Name}"
+                                                          HorizontalAlignment="Stretch" />
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </DockPanel>
+                    </Border>
+                    <Button Grid.Row="2"
+                            Command="{Binding RunIndividualComparisonCommand}"
+                            Content="Построить графики"
+                            Classes="accent"
+                            IsEnabled="{Binding !IsBusy}"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                            Padding="10" />
+                </Grid>
+            </TabItem>
         </TabControl>
 
         <!-- Общая нижняя панель -->
