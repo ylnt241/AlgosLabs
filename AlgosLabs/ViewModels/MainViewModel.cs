@@ -23,6 +23,7 @@ public partial class MainViewModel : ObservableObject
 
     public ObservableCollection<AlgorithmSelectionViewModel> PowerAlgorithmsSelection { get; } 
         = new ObservableCollection<AlgorithmSelectionViewModel>();
+    public ObservableCollection<AlgorithmSelectionViewModel> IndividualAlgorithms { get; } = new ObservableCollection<AlgorithmSelectionViewModel>();
     [ObservableProperty] private int _algorithmStep = 1;
     [ObservableProperty] private bool _isBusy;
 
@@ -45,6 +46,7 @@ public partial class MainViewModel : ObservableObject
     {
         AvailableAlgorithms.Clear();
         PowerAlgorithmsSelection.Clear();
+        IndividualAlgorithms.Clear();
 
         var foundAlgorithms = _scanner.FindAllAlgorithms();
 
@@ -57,20 +59,28 @@ public partial class MainViewModel : ObservableObject
         {
             PowerAlgorithmsSelection.Add(item);
         }
-
-        // Заполняем остальные алгоритмы
+        
         var generalAlgos = foundAlgorithms
-            .Where(a => a is not IPowerAlgorithm)
+            .Where(a => a is not (IPowerAlgorithm or IIndividualAlgorithm))
             .Select(a => new AlgorithmSelectionViewModel(a));
-
+    
         foreach (var item in generalAlgos)
         {
             AvailableAlgorithms.Add(item);
         }
+        
+        var individualAlgos = foundAlgorithms
+            .OfType<IIndividualAlgorithm>()
+            .Select(a => new AlgorithmSelectionViewModel(a));
+
+        foreach (var item in individualAlgos)
+        {
+            IndividualAlgorithms.Add(item);
+        }
     }
 
     [RelayCommand]
-    private async Task RunComparisonAsync()
+    private async Task RunVectorComparisonAsync()
     {
         var selected = AvailableAlgorithms
             .Where(x => x.IsSelected)
@@ -172,4 +182,42 @@ public partial class MainViewModel : ObservableObject
         window.PlotResults(results);
         window.Show();
     }
+    [RelayCommand]
+    private async Task RunIndividualComparisonAsync()
+    {
+        var selected = IndividualAlgorithms
+            .Where(x => x.IsSelected)
+            .Select<AlgorithmSelectionViewModel, IAlgorithm>(x => x.Algorithm)
+            .ToList();
+
+        if (!selected.Any()) return;
+
+        IsBusy = true;
+
+        var allResults = new ChartDataModel();
+        allResults.SeriesList.Clear();
+        var approxService = new ApproximationService();
+
+        foreach (var algo in selected)
+        {
+            var points = await _benchmarkService.RunDynamicBenchmark(
+                algo,
+                MaxN,
+                StepN,
+                AlgorithmStep
+            );
+
+            var targetComplexity = ComplexityType.Linear;
+            var approxResult = approxService.Fit(points, targetComplexity);
+
+            allResults.SeriesList.Add(new SeriesData(algo.Name, points, approxResult));
+        }
+
+        IsBusy = false;
+
+        var chartWindow = new ChartWindow();
+        chartWindow.DataContext = new ChartWindowViewModel(allResults);
+        chartWindow.Show();
+    }
+
 }
