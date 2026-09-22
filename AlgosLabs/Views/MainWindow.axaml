@@ -12,40 +12,67 @@
         <vm:MainViewModel />
     </Design.DataContext>
 
-    <Grid RowDefinitions="*, Auto" Margin="16">
-        
+    <!-- Выделяем 3 строки: Auto (шапка), * (основные вкладки), Auto (прогресс-бар) -->
+    <Grid RowDefinitions="Auto, *, Auto" Margin="16">
+
+        <!-- Верхняя шапка с заголовком и кнопкой истории -->
+        <Border Grid.Row="0"
+                Background="{DynamicResource SystemRegionBrush}"
+                CornerRadius="8"
+                Padding="8,6"
+                Margin="0,0,0,12">
+            <DockPanel LastChildFill="True">
+                <!-- Кнопка вызова истории в правом верхнем углу (или левом через Dock="Left") -->
+                <Button DockPanel.Dock="Right"
+                        Command="{Binding OpenHistoryCommand}"
+                        Content="История запусков"
+                        Margin="4,0" />
+
+                <!-- Заголовок приложения -->
+                <TextBlock Text="Лабораторный комплекс алгоритмов"
+                           VerticalAlignment="Center"
+                           FontWeight="Bold"
+                           FontSize="15"
+                           Margin="8,0,0,0" />
+            </DockPanel>
+        </Border>
+
         <!-- Вкладки режимов тестирования -->
-        <TabControl x:Name="MainTabControl" Grid.Row="0">
-            
+        <TabControl x:Name="MainTabControl" Grid.Row="1">
+
             <!-- 1. Векторные операции -->
             <TabItem Header="Векторные операции">
                 <Grid RowDefinitions="Auto, *, Auto" Margin="0,12,0,0">
-                    
+
                     <!-- Карточка параметров N -->
-                    <Border Grid.Row="0" 
-                            Background="{DynamicResource SystemRegionBrush}" 
+                    <Border Grid.Row="0"
+                            Background="{DynamicResource SystemRegionBrush}"
                             Theme="{StaticResource CardBorderTheme}"
                             CornerRadius="8" Padding="12" Margin="0,0,0,12">
                         <StackPanel Spacing="8">
                             <TextBlock Text="Параметры входных данных" FontWeight="SemiBold" FontSize="14" />
-                            
+
                             <Grid ColumnDefinitions="*, *" RowDefinitions="Auto" Margin="0,4,0,0">
                                 <StackPanel Grid.Column="0" Margin="0,0,6,0" Spacing="4">
-                                    <TextBlock Text="Max N:" FontSize="12" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
-                                    <NumericUpDown Value="{Binding MaxN}" Minimum="10" Maximum="1000000" Increment="500" HorizontalAlignment="Stretch" />
+                                    <TextBlock Text="Max N:" FontSize="12"
+                                               Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                                    <NumericUpDown Value="{Binding MaxN}" Minimum="10" Maximum="1000000"
+                                                   Increment="500" HorizontalAlignment="Stretch" />
                                 </StackPanel>
 
                                 <StackPanel Grid.Column="1" Margin="6,0,0,0" Spacing="4">
-                                    <TextBlock Text="Шаг N:" FontSize="12" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
-                                    <NumericUpDown Value="{Binding StepN}" Minimum="1" Maximum="10000" Increment="50" HorizontalAlignment="Stretch" />
+                                    <TextBlock Text="Шаг N:" FontSize="12"
+                                               Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                                    <NumericUpDown Value="{Binding StepN}" Minimum="1" Maximum="10000" Increment="50"
+                                                   HorizontalAlignment="Stretch" />
                                 </StackPanel>
                             </Grid>
                         </StackPanel>
                     </Border>
 
                     <!-- Список выбора алгоритмов -->
-                    <Border Grid.Row="1" 
-                            BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}" 
+                    <Border Grid.Row="1"
+                            BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
                             BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,0,0,12">
                         <DockPanel>
                             <TextBlock Text="Выберите алгоритмы для сравнения:"
@@ -69,6 +96,7 @@
                             </ScrollViewer>
                         </DockPanel>
                     </Border>
+
                     <Button Grid.Row="2"
                             Command="{Binding RunVectorComparisonCommand}"
                             Content="Построить графики"
@@ -85,48 +113,54 @@
                 <ScrollViewer Margin="0,12,0,0">
                     <StackPanel Spacing="12">
                         <!-- Блок оси N -->
-                        <Border Background="{DynamicResource SystemRegionBrush}" 
+                        <Border Background="{DynamicResource SystemRegionBrush}"
                                 CornerRadius="8" Padding="12">
                             <StackPanel Spacing="8">
-                                <TextBlock Text="Параметры строки (Ось N)" FontWeight="SemiBold" FontSize="14"/>
+                                <TextBlock Text="Параметры строки (Ось N)" FontWeight="SemiBold" FontSize="14" />
                                 <Grid ColumnDefinitions="*, *, *" ColumnSpacing="8">
                                     <StackPanel Grid.Column="0" Spacing="4">
-                                        <TextBlock Text="Start N:" FontSize="12" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
-                                        <NumericUpDown Value="{Binding StartN}" Minimum="10" Increment="10"/>
+                                        <TextBlock Text="Start N:" FontSize="12"
+                                                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                                        <NumericUpDown Value="{Binding StartN}" Minimum="10" Increment="10" />
                                     </StackPanel>
 
                                     <StackPanel Grid.Column="1" Spacing="4">
-                                        <TextBlock Text="Max N:" FontSize="12" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
-                                        <NumericUpDown Value="{Binding MaxN}" Minimum="10" Increment="50"/>
+                                        <TextBlock Text="Max N:" FontSize="12"
+                                                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                                        <NumericUpDown Value="{Binding MaxN}" Minimum="10" Increment="50" />
                                     </StackPanel>
 
                                     <StackPanel Grid.Column="2" Spacing="4">
-                                        <TextBlock Text="Step N:" FontSize="12" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
-                                        <NumericUpDown Value="{Binding StepN}" Minimum="1" Increment="10"/>
+                                        <TextBlock Text="Step N:" FontSize="12"
+                                                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                                        <NumericUpDown Value="{Binding StepN}" Minimum="1" Increment="10" />
                                     </StackPanel>
                                 </Grid>
                             </StackPanel>
                         </Border>
 
                         <!-- Блок оси M -->
-                        <Border Background="{DynamicResource SystemRegionBrush}" 
+                        <Border Background="{DynamicResource SystemRegionBrush}"
                                 CornerRadius="8" Padding="12">
                             <StackPanel Spacing="8">
-                                <TextBlock Text="Параметры столбцов (Ось M)" FontWeight="SemiBold" FontSize="14"/>
+                                <TextBlock Text="Параметры столбцов (Ось M)" FontWeight="SemiBold" FontSize="14" />
                                 <Grid ColumnDefinitions="*, *, *" ColumnSpacing="8">
                                     <StackPanel Grid.Column="0" Spacing="4">
-                                        <TextBlock Text="Start M:" FontSize="12" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
-                                        <NumericUpDown Value="{Binding StartM}" Minimum="10" Increment="10"/>
+                                        <TextBlock Text="Start M:" FontSize="12"
+                                                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                                        <NumericUpDown Value="{Binding StartM}" Minimum="10" Increment="10" />
                                     </StackPanel>
 
                                     <StackPanel Grid.Column="1" Spacing="4">
-                                        <TextBlock Text="Max M:" FontSize="12" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
-                                        <NumericUpDown Value="{Binding MaxM}" Minimum="10" Increment="50"/>
+                                        <TextBlock Text="Max M:" FontSize="12"
+                                                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                                        <NumericUpDown Value="{Binding MaxM}" Minimum="10" Increment="50" />
                                     </StackPanel>
 
                                     <StackPanel Grid.Column="2" Spacing="4">
-                                        <TextBlock Text="Step M:" FontSize="12" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"/>
-                                        <NumericUpDown Value="{Binding StepM}" Minimum="1" Increment="10"/>
+                                        <TextBlock Text="Step M:" FontSize="12"
+                                                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                                        <NumericUpDown Value="{Binding StepM}" Minimum="1" Increment="10" />
                                     </StackPanel>
                                 </Grid>
                             </StackPanel>
@@ -139,83 +173,90 @@
                                 Classes="accent"
                                 HorizontalAlignment="Stretch"
                                 HorizontalContentAlignment="Center"
-                                Padding="10"/>
+                                Padding="10" />
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
-<TabItem Header="Возведение в степень">
-    <Border Background="{DynamicResource SystemRegionBrush}" 
-            CornerRadius="8" Padding="16" Margin="0,12,0,0">
-        <StackPanel Spacing="12">
-            <TextBlock Text="Сравнение количества операций (1..1000)" FontWeight="SemiBold" FontSize="14"/>
-            
-            <Grid ColumnDefinitions="*, *" ColumnSpacing="12">
-                <StackPanel Grid.Column="0" Spacing="4">
-                    <TextBlock Text="Основание (x):" FontSize="12"/>
-                    <NumericUpDown Value="{Binding BaseX}" Increment="0.5"/>
-                </StackPanel>
-                
-                <StackPanel Grid.Column="1" Spacing="4">
-                    <TextBlock Text="Макс. степень (N):" FontSize="12"/>
-                    <NumericUpDown Value="{Binding PowerMaxN}" Minimum="10" Maximum="10000" Increment="100"/>
-                </StackPanel>
-            </Grid>
 
-            <!-- Выбор алгоритмов -->
-            <Border BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}" 
-                    BorderThickness="1" CornerRadius="6" Padding="10">
-                <StackPanel Spacing="6">
-                    <TextBlock Text="Выберите алгоритмы:" FontWeight="SemiBold" FontSize="12"/>
-                    <ItemsControl ItemsSource="{Binding PowerAlgorithmsSelection}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <CheckBox IsChecked="{Binding IsSelected}" 
-                                          Content="{Binding Algorithm.Name}"
-                                          Margin="0,2"/>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </StackPanel>
-            </Border>
+            <!-- 3. Возведение в степень -->
+            <TabItem Header="Возведение в степень">
+                <Border Background="{DynamicResource SystemRegionBrush}"
+                        CornerRadius="8" Padding="16" Margin="0,12,0,0">
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="Сравнение количества операций (1..1000)" FontWeight="SemiBold" FontSize="14" />
 
-            <Button Content="Построить график шагов"
-                    Command="{Binding RunPowerBenchmarkCommand}"
-                    Classes="accent"
-                    HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Center"
-                    Padding="10"/>
-        </StackPanel>
-    </Border>
-</TabItem>
-                        <!-- 4. Алгоритмы из индивидуального задания -->
+                        <Grid ColumnDefinitions="*, *" ColumnSpacing="12">
+                            <StackPanel Grid.Column="0" Spacing="4">
+                                <TextBlock Text="Основание (x):" FontSize="12" />
+                                <NumericUpDown Value="{Binding BaseX}" Increment="0.5" />
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1" Spacing="4">
+                                <TextBlock Text="Макс. степень (N):" FontSize="12" />
+                                <NumericUpDown Value="{Binding PowerMaxN}" Minimum="10" Maximum="10000" Increment="100" />
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Выбор алгоритмов -->
+                        <Border BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                                BorderThickness="1" CornerRadius="6" Padding="10">
+                            <StackPanel Spacing="6">
+                                <TextBlock Text="Выберите алгоритмы:" FontWeight="SemiBold" FontSize="12" />
+                                <ItemsControl ItemsSource="{Binding PowerAlgorithmsSelection}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <CheckBox IsChecked="{Binding IsSelected}"
+                                                      Content="{Binding Algorithm.Name}"
+                                                      Margin="0,2" />
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Border>
+
+                        <Button Content="Построить график шагов"
+                                Command="{Binding RunPowerBenchmarkCommand}"
+                                Classes="accent"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Center"
+                                Padding="10" />
+                    </StackPanel>
+                </Border>
+            </TabItem>
+
+            <!-- 4. Алгоритмы из индивидуального задания -->
             <TabItem Header="Индивидуальное задание">
                 <Grid RowDefinitions="Auto, *, Auto" Margin="0,12,0,0">
-                    
+
                     <!-- Карточка параметров N -->
-                    <Border Grid.Row="0" 
-                            Background="{DynamicResource SystemRegionBrush}" 
+                    <Border Grid.Row="0"
+                            Background="{DynamicResource SystemRegionBrush}"
                             Theme="{StaticResource CardBorderTheme}"
                             CornerRadius="8" Padding="12" Margin="0,0,0,12">
                         <StackPanel Spacing="8">
                             <TextBlock Text="Параметры входных данных" FontWeight="SemiBold" FontSize="14" />
-                            
+
                             <Grid ColumnDefinitions="*, *" RowDefinitions="Auto" Margin="0,4,0,0">
                                 <StackPanel Grid.Column="0" Margin="0,0,6,0" Spacing="4">
-                                    <TextBlock Text="Max N:" FontSize="12" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
-                                    <NumericUpDown Value="{Binding MaxN}" Minimum="10" Maximum="1000000" Increment="500" HorizontalAlignment="Stretch" />
+                                    <TextBlock Text="Max N:" FontSize="12"
+                                               Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                                    <NumericUpDown Value="{Binding MaxN}" Minimum="10" Maximum="1000000"
+                                                   Increment="500" HorizontalAlignment="Stretch" />
                                 </StackPanel>
 
                                 <StackPanel Grid.Column="1" Margin="6,0,0,0" Spacing="4">
-                                    <TextBlock Text="Шаг N:" FontSize="12" Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
-                                    <NumericUpDown Value="{Binding StepN}" Minimum="1" Maximum="10000" Increment="50" HorizontalAlignment="Stretch" />
+                                    <TextBlock Text="Шаг N:" FontSize="12"
+                                               Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                                    <NumericUpDown Value="{Binding StepN}" Minimum="1" Maximum="10000" Increment="50"
+                                                   HorizontalAlignment="Stretch" />
                                 </StackPanel>
                             </Grid>
                         </StackPanel>
                     </Border>
 
                     <!-- Список выбора алгоритмов -->
-                    <Border Grid.Row="1" 
-                            BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}" 
+                    <Border Grid.Row="1"
+                            BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
                             BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,0,0,12">
                         <DockPanel>
                             <TextBlock Text="Выберите алгоритмы для сравнения:"
@@ -239,6 +280,7 @@
                             </ScrollViewer>
                         </DockPanel>
                     </Border>
+
                     <Button Grid.Row="2"
                             Command="{Binding RunIndividualComparisonCommand}"
                             Content="Построить графики"
@@ -251,12 +293,12 @@
             </TabItem>
         </TabControl>
 
-        <!-- Общая нижняя панель -->
-        <StackPanel Grid.Row="1" Margin="0,12,0,0">
+        <!-- Общая нижняя панель с индикатором загрузки -->
+        <StackPanel Grid.Row="2" Margin="0,8,0,0">
             <ProgressBar IsIndeterminate="True"
                          IsVisible="{Binding IsBusy}"
-                         Height="3" 
-                         HorizontalAlignment="Stretch"/>
+                         Height="3"
+                         HorizontalAlignment="Stretch" />
         </StackPanel>
     </Grid>
 </Window>

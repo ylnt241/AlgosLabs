@@ -15,7 +15,7 @@ public class RecursivePowerAlgorithm : BasePowerAlgorithm
     {
         if (n == 0) return 1.0;
 
-        StepCounter++; 
+        StepCounter++;
         return x * ComputeRecursive(x, n - 1);
     }
 }

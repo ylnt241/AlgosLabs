@@ -4,16 +4,16 @@
         x:Class="AlgosLabs.Views.HeatmapWindow"
         Title="3D Benchmark: Matrix Multiplication"
         Width="900" Height="700">
-    
+
     <Grid RowDefinitions="*, Auto">
         <!-- Компонент ScottPlot -->
         <ScottPlot:AvaPlot x:Name="AvaPlot1" Grid.Row="0" />
-        
+
         <!-- Панель статуса / Легенда -->
-        <TextBlock x:Name="StatusText" 
-                   Grid.Row="1" 
-                   Margin="10" 
-                   HorizontalAlignment="Center" 
-                   Foreground="Gray"/>
+        <TextBlock x:Name="StatusText"
+                   Grid.Row="1"
+                   Margin="10"
+                   HorizontalAlignment="Center"
+                   Foreground="Gray" />
     </Grid>
 </Window>

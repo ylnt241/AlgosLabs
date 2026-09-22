@@ -7,13 +7,11 @@ public class ProductElements : IAlgorithm<double[]>
     public string Name => "Произведение элементов";
     public string Id => "product-elements";
     public int MaxN => 50000;
+
     public void Execute(double[] data, int step)
     {
         double product = 1;
-        for (int i = 0; i < data.Length; i++)
-        {
-            product *= data[i];
-        }
+        for (var i = 0; i < data.Length; i++) product *= data[i];
 
         var result = product;
     }
