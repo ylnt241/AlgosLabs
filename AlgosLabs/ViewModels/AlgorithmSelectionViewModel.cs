@@ -7,9 +7,10 @@ public partial class AlgorithmSelectionViewModel : ObservableObject
 {
     [ObservableProperty] private bool _isSelected;
 
-    public AlgorithmSelectionViewModel(IAlgorithm algorithm)
+    public AlgorithmSelectionViewModel(IAlgorithm algorithm, bool isSelected = false)
     {
         Algorithm = algorithm;
+        IsSelected = isSelected;
     }
 
     public IAlgorithm Algorithm { get; }
