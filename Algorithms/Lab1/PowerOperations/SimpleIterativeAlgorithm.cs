@@ -8,9 +8,9 @@ public class IterativePowerAlgorithm : BasePowerAlgorithm
     public override void Execute(PowerData data, int step)
     {
         StepCounter = 0;
-        double result = 1.0;
+        var result = 1.0;
 
-        for (int i = 0; i < data.N; i++)
+        for (var i = 0; i < data.N; i++)
         {
             StepCounter++; // Подсчитываем умножение
             result *= data.X;

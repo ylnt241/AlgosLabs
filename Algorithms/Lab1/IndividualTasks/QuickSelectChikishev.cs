@@ -16,11 +16,11 @@ public class QuickSelectChikishev : IAlgorithm<double[]>, IIndividualAlgorithm
 
         // Делаем копию, чтобы измерения времени на разных прогонах 
         // проходили на неотсортированных данных
-        double[] array = new double[data.Length];
+        var array = new double[data.Length];
         Array.Copy(data, array, data.Length);
 
         // Поиск k-й порядковой статистики (по умолчанию — медиана)
-        int k = array.Length / 2;
+        var k = array.Length / 2;
         QuickSelect(array, 0, array.Length - 1, k, step);
     }
 
@@ -37,7 +37,7 @@ public class QuickSelectChikishev : IAlgorithm<double[]>, IIndividualAlgorithm
             if (left == right)
                 return array[left];
 
-            int pivotIndex = Partition(array, left, right, step);
+            var pivotIndex = Partition(array, left, right, step);
 
             if (k == pivotIndex)
                 return array[k];
@@ -54,22 +54,20 @@ public class QuickSelectChikishev : IAlgorithm<double[]>, IIndividualAlgorithm
     private static int Partition(double[] array, int left, int right, int step)
     {
         // Выбираем опорный элемент
-        int pivotIndex = left + (right - left) / 2;
-        double pivotValue = array[pivotIndex];
+        var pivotIndex = left + (right - left) / 2;
+        var pivotValue = array[pivotIndex];
 
         // Переносим pivot в конец
         (array[pivotIndex], array[right]) = (array[right], array[pivotIndex]);
 
-        int storeIndex = left;
+        var storeIndex = left;
 
-        for (int i = left; i < right; i += step)
-        {
+        for (var i = left; i < right; i += step)
             if (array[i] < pivotValue)
             {
                 (array[storeIndex], array[i]) = (array[i], array[storeIndex]);
                 storeIndex++;
             }
-        }
 
         // Возвращаем pivot на итоговое место
         (array[storeIndex], array[right]) = (array[right], array[storeIndex]);

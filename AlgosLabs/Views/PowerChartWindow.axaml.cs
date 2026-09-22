@@ -23,7 +23,7 @@ public partial class PowerChartWindow : Window
             var scatter = PowerPlot.Plot.Add.Scatter(points);
             scatter.LegendText = name;
 
-           
+
             if (name.ToLowerInvariant().Contains("итеративный"))
             {
                 scatter.LineWidth = 4;
@@ -32,7 +32,6 @@ public partial class PowerChartWindow : Window
             }
             else if (name.ToLowerInvariant().Contains("рекурсивный"))
             {
-                
                 scatter.LineWidth = 4;
                 scatter.LinePattern = LinePattern.Solid;
                 scatter.Color = Colors.Red;

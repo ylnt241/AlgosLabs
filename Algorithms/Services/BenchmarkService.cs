@@ -56,7 +56,7 @@ public class UniversalBenchmarkService
         IProgress<double>? progress = null)
     {
         WarmupAlgorithm(algorithm, algorithmStep);
-        
+
         var results = new List<BenchmarkResultPoint>();
         var totalSteps = (maxN - 1) / stepN + 1;
         var currentStepCount = 0;
@@ -77,16 +77,14 @@ public class UniversalBenchmarkService
 
         return results;
     }
+
     private static void WarmupAlgorithm<TData>(IAlgorithm<TData> algorithm, int algorithmStep)
     {
         try
         {
             // Генерация минимального набора данных и 3-5 холостых прогонов
-            TData warmupData = algorithm.Generate(10);
-            for (int i = 0; i < 5; i++)
-            {
-                algorithm.Execute(warmupData, algorithmStep);
-            }
+            var warmupData = algorithm.Generate(10);
+            for (var i = 0; i < 5; i++) algorithm.Execute(warmupData, algorithmStep);
 
             // Очищаем мусор после прогрева
             GC.Collect();
@@ -98,6 +96,7 @@ public class UniversalBenchmarkService
             // Игнорируем возможные ошибки прогрева
         }
     }
+
     private async Task<double?> GetFromCacheAsync(string cacheKey)
     {
         using var db = new AppDbContext();
@@ -112,24 +111,21 @@ public class UniversalBenchmarkService
         int algorithmStep)
     {
         var generateMethod = algorithm.GetType().GetMethod("Generate", new[] { typeof(int) });
-    
+
         // Количество итераций для сглаживания системного шума
-        int innerLoops = 5;
+        var innerLoops = 5;
         var runs = new double[5];
 
         for (var run = 0; run < 5; run++)
         {
 // Вызываем Generate(n) с текущим N, либо дефолтный Generate()
-            TData inputData = algorithm.Generate(n);
+            var inputData = algorithm.Generate(n);
 // Прогрев JIT (Warmup)
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
             var sw = Stopwatch.StartNew();
-            for (int i = 0; i < innerLoops; i++)
-            {
-                algorithm.Execute(inputData, algorithmStep);
-            } 
+            for (var i = 0; i < innerLoops; i++) algorithm.Execute(inputData, algorithmStep);
             sw.Stop();
             runs[run] = sw.Elapsed.TotalMilliseconds / innerLoops;
         }

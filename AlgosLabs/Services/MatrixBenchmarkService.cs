@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using Algorithms.Lab1.MatrixOperations;
 
@@ -13,16 +12,13 @@ public class MatrixBenchmarkService
     public static double[,] GenerateMatrix(int rows, int cols)
     {
         var matrix = new double[rows, cols];
-        for (int i = 0; i < rows; i++)
-        {
-            for (int j = 0; j < cols; j++)
-            {
-                matrix[i, j] = _random.NextDouble() * 100.0; // [0; 100)
-            }
-        }
+        for (var i = 0; i < rows; i++)
+        for (var j = 0; j < cols; j++)
+            matrix[i, j] = _random.NextDouble() * 100.0; // [0; 100)
+
         return matrix;
     }
-    
+
     public static double MeasureMultiplyTime(int n, int m, int k = 100)
     {
         // A имеет размер N x K, B имеет размер K x M, C имеет размер N x M
@@ -32,17 +28,12 @@ public class MatrixBenchmarkService
 
         var sw = Stopwatch.StartNew();
 
-        for (int i = 0; i < n; i++)
+        for (var i = 0; i < n; i++)
+        for (var j = 0; j < m; j++)
         {
-            for (int j = 0; j < m; j++)
-            {
-                double sum = 0;
-                for (int p = 0; p < k; p++)
-                {
-                    sum += a[i, p] * b[p, j];
-                }
-                c[i, j] = sum;
-            }
+            double sum = 0;
+            for (var p = 0; p < k; p++) sum += a[i, p] * b[p, j];
+            c[i, j] = sum;
         }
 
         sw.Stop();
@@ -54,16 +45,14 @@ public class MatrixBenchmarkService
     {
         var model = new HeatmapDataModel();
 
-        for (int n = startN; n <= maxN; n += stepN)
+        for (var n = startN; n <= maxN; n += stepN)
+        for (var m = startM; m <= maxM; m += stepM)
         {
-            for (int m = startM; m <= maxM; m += stepM)
-            {
-                // Прогрев
-                MeasureMultiplyTime(10, 10, 10);
+            // Прогрев
+            MeasureMultiplyTime(10, 10, 10);
 
-                double time = MeasureMultiplyTime(n, m);
-                model.Points.Add(new HeatmapPoint(n, m, time));
-            }
+            var time = MeasureMultiplyTime(n, m);
+            model.Points.Add(new HeatmapPoint(n, m, time));
         }
 
         return model;
