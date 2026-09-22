@@ -22,12 +22,16 @@
                 Padding="8,6"
                 Margin="0,0,0,12">
             <DockPanel LastChildFill="True">
-                <!-- Кнопка вызова истории в правом верхнем углу (или левом через Dock="Left") -->
+                <!-- Кнопка вызова истории в правом верхнем углу  -->
                 <Button DockPanel.Dock="Right"
                         Command="{Binding OpenHistoryCommand}"
                         Content="История запусков"
                         Margin="4,0" />
-
+                <Button DockPanel.Dock="Right"
+                        Content="Очитсить историю и кэш"
+                        IsEnabled="{Binding !IsBusy}"
+                        Command="{Binding ClearHistoryAndCacheCommand}"
+                        Margin="4,0"></Button>
                 <!-- Заголовок приложения -->
                 <TextBlock Text="Лабораторный комплекс алгоритмов"
                            VerticalAlignment="Center"
@@ -294,11 +298,13 @@
         </TabControl>
 
         <!-- Общая нижняя панель с индикатором загрузки -->
-        <StackPanel Grid.Row="2" Margin="0,8,0,0">
-            <ProgressBar IsIndeterminate="True"
+        <Grid Grid.Row="2" RowDefinitions="Auto, Auto" Margin="0,8,0,0">
+            <!-- Тонкая полоска загрузки (наверху панели) -->
+            <ProgressBar Grid.Row="0"
+                         IsIndeterminate="True"
                          IsVisible="{Binding IsBusy}"
                          Height="3"
                          HorizontalAlignment="Stretch" />
-        </StackPanel>
+        </Grid>
     </Grid>
 </Window>

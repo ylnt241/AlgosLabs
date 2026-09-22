@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Algorithms.Infrastructure;
 using Algorithms.Interfaces;
 using Algorithms.Lab1.PowerOperations;
 using Algorithms.Services;
@@ -288,5 +290,31 @@ public partial class MainViewModel : ObservableObject
         };
 
         chartWindow.Show();
+    }
+    
+    [RelayCommand]
+    private async Task ClearHistoryAndCacheAsync()
+    {
+        IsBusy = true;
+        try
+        {
+            // Выполняем удаление в фоновом потоке, чтобы не морозить интерфейс
+            await Task.Run(() =>
+            {
+                using var db = new AppDbContext();
+            
+                db.CacheEntries.RemoveRange(db.CacheEntries);
+                db.SaveChanges();
+                
+            });
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Ошибка при очистке истории: {ex.Message}");
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 }
