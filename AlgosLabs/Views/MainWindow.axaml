@@ -1,0 +1,70 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:AlgosLabs.ViewModels"
+        x:Class="AlgosLabs.Views.MainWindow"
+        x:DataType="vm:MainViewModel"
+        Title="Бенчмарк алгоритмов"
+        Width="550" Height="450"
+        WindowStartupLocation="CenterScreen">
+
+    <Design.DataContext>
+        <vm:MainViewModel />
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto, *, Auto" Margin="20">
+
+        <!-- Параметры эксперимента -->
+        <Border Grid.Row="0" Background="#F4F4F4" Padding="15" CornerRadius="8" Margin="0,0,0,15">
+            <StackPanel Spacing="10">
+                <TextBlock Text="Параметры эксперимента" FontWeight="Bold" FontSize="16" />
+                <Grid ColumnDefinitions="*, *" RowDefinitions="Auto, Auto" Margin="0,5,0,0">
+                    <StackPanel Grid.Row="0" Grid.Column="0" Margin="5">
+                        <TextBlock Text="Max N:" VerticalAlignment="Center" />
+                        <NumericUpDown Value="{Binding MaxN}" Minimum="10" Maximum="1000000" Increment="500" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="0" Grid.Column="1" Margin="5">
+                        <TextBlock Text="Шаг N:" VerticalAlignment="Center" />
+                        <NumericUpDown Value="{Binding StepN}" Minimum="1" Maximum="10000" Increment="50" />
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <!-- Автоматически собранный список алгоритмов (CheckBox) -->
+        <Border Grid.Row="1" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="8" Padding="10">
+            <DockPanel>
+                <TextBlock Text="Выберите алгоритмы для сравнения:"
+                           DockPanel.Dock="Top"
+                           FontWeight="SemiBold"
+                           Margin="5,0,0,10" />
+
+                <ScrollViewer>
+                    <ItemsControl ItemsSource="{Binding AvailableAlgorithms}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding IsSelected}"
+                                          Content="{Binding Algorithm.Name}"
+                                          Margin="5,2" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </DockPanel>
+        </Border>
+
+        <!-- Панель управления и кнопка запуска -->
+        <StackPanel Grid.Row="2" Margin="0,15,0,0" Spacing="10">
+            <ProgressBar IsIndeterminate="True"
+                         IsVisible="{Binding IsBusy}"
+                         Height="4" />
+
+            <Button Command="{Binding RunComparisonCommand}"
+                    Content="📊 Построить графики"
+                    IsEnabled="{Binding !IsBusy}"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Padding="10" />
+        </StackPanel>
+    </Grid>
+</Window>

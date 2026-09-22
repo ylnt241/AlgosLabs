@@ -1,0 +1,4 @@
+<Solution>
+    <Project Path="Algorithms/Algorithms.csproj"/>
+    <Project Path="AlgosLabs/AlgosLabs.csproj"/>
+</Solution>

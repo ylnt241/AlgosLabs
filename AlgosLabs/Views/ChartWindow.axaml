@@ -1,0 +1,11 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ScottPlot="clr-namespace:ScottPlot.Avalonia;assembly=ScottPlot.Avalonia"
+        x:Class="AlgosLabs.Views.ChartWindow"
+        Title="Сравнительный анализ алгоритмов"
+        Width="900" Height="600">
+
+    <Grid>
+        <ScottPlot:AvaPlot x:Name="MyPlot" />
+    </Grid>
+</Window>
