@@ -8,20 +8,20 @@ public class MatrixBenchmarkService
 {
     private static readonly Random _random = new();
 
-    // Генерация матрицы N x M с неотрицательными элементами
+    // Случайная матрица rows x cols.
     public static double[,] GenerateMatrix(int rows, int cols)
     {
         var matrix = new double[rows, cols];
         for (var i = 0; i < rows; i++)
         for (var j = 0; j < cols; j++)
-            matrix[i, j] = _random.NextDouble() * 100.0; // [0; 100)
+            matrix[i, j] = _random.NextDouble() * 100.0;
 
         return matrix;
     }
 
     public static double MeasureMultiplyTime(int n, int m, int k = 100)
     {
-        // A имеет размер N x K, B имеет размер K x M, C имеет размер N x M
+        // A: n x k, B: k x m, C: n x m.
         var a = GenerateMatrix(n, k);
         var b = GenerateMatrix(k, m);
         var c = new double[n, m];
@@ -40,7 +40,7 @@ public class MatrixBenchmarkService
         return sw.Elapsed.TotalMilliseconds;
     }
 
-    // Запуск сетки бенчмарков по N и M
+    // Проходим сетку N x M и сохраняем время каждой точки.
     public static HeatmapDataModel RunBenchmarkGrid(int startN, int maxN, int stepN, int startM, int maxM, int stepM)
     {
         var model = new HeatmapDataModel();
@@ -48,7 +48,7 @@ public class MatrixBenchmarkService
         for (var n = startN; n <= maxN; n += stepN)
         for (var m = startM; m <= maxM; m += stepM)
         {
-            // Прогрев
+            // Прогрев, чтобы JIT не влиял на первый замер.
             MeasureMultiplyTime(10, 10, 10);
 
             var time = MeasureMultiplyTime(n, m);

@@ -24,9 +24,7 @@ public record ApproximationResult(
 
 public class ApproximationService
 {
-    /// <summary>
-    ///     Функция f(N) в зависимости от выбранного типа сложности
-    /// </summary>
+    /// <summary>Значение f(N) для выбранной гипотезы сложности.</summary>
     public static double EvaluateComplexityFunction(double n, ComplexityType type)
     {
         return type switch
@@ -41,9 +39,7 @@ public class ApproximationService
         };
     }
 
-    /// <summary>
-    ///     Расчет коэффициента C и MSE: MSE = (1/k) * Sum( (T_emp - C * f(N))^2 )
-    /// </summary>
+    /// <summary>Подбирает C по МНК и считает MSE для выбранной сложности.</summary>
     public ApproximationResult Fit(List<BenchmarkResultPoint> points, ComplexityType complexity)
     {
         var k = points.Count;
@@ -59,10 +55,10 @@ public class ApproximationService
             sumDenominator += fn * fn;
         }
 
-        // Коэффициент C методом наименьших квадратов
+        // C = sum(T * f) / sum(f^2) — МНК без свободного члена.
         var c = sumDenominator != 0 ? sumNumerator / sumDenominator : 0;
 
-        // Вычисление MSE и формирование точек кривой
+        // Считаем ошибку и заодно готовим точки для графика.
         double sumSquareError = 0;
         var theoreticalPoints = new List<(double X, double Y)>();
 

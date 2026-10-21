@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Algorithms.Interfaces;
 
-// Укажите ваш namespace для IAlgorithm
-
 namespace AlgosLabs.Services;
 
 public class AlgorithmScanner
@@ -13,7 +11,7 @@ public class AlgorithmScanner
     {
         var instances = new List<IAlgorithm>();
 
-        // Ищем типы и убираем дубликаты по полному имени класса
+        // Собираем реализации из всех загруженных сборок; DistinctBy — от повторной регистрации.
         var algorithmTypes = AppDomain.CurrentDomain.GetAssemblies()
             .SelectMany(a =>
             {

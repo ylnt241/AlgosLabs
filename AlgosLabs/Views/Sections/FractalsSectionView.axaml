@@ -1,0 +1,134 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:AlgosLabs.ViewModels"
+             x:Class="AlgosLabs.Views.Sections.FractalsSectionView"
+             x:DataType="vm:MainViewModel">
+
+    <!-- Раздел «Отрисовка фракталов»: предпросмотр и замер времени. -->
+    <Grid ColumnDefinitions="340, *" ColumnSpacing="12" Margin="0,12,0,0">
+
+        <ScrollViewer Grid.Column="0">
+            <StackPanel Spacing="12">
+
+                <Border Background="{DynamicResource SystemRegionBrush}" CornerRadius="8" Padding="12">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Параметры отрисовки" FontWeight="SemiBold" FontSize="14" />
+
+                        <TextBlock Text="{Binding FractalAlgorithm.Name}"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource SystemControlForegroundBaseHighBrush}" />
+                        <TextBlock Text="{Binding FractalAlgorithm.Description}"
+                                   FontSize="12"
+                                   TextWrapping="Wrap"
+                                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+
+                        <Grid ColumnDefinitions="*, *" ColumnSpacing="8" Margin="0,4,0,0">
+                            <StackPanel Grid.Column="0" Spacing="4">
+                                <TextBlock Text="Глубина (N):" FontSize="12"
+                                           Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                                <NumericUpDown Value="{Binding FractalPreviewDepth}"
+                                               Minimum="1"
+                                               Maximum="{Binding FractalAlgorithm.MaxN}"
+                                               Increment="1"
+                                               HorizontalAlignment="Stretch" />
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1" Spacing="4">
+                                <TextBlock Text="Размер холста:" FontSize="12"
+                                           Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                                <ComboBox SelectedIndex="{Binding CanvasSizeIndex, Mode=TwoWay}"
+                                          HorizontalAlignment="Stretch">
+                                    <ComboBoxItem Content="256 × 256" />
+                                    <ComboBoxItem Content="512 × 512" />
+                                    <ComboBoxItem Content="1024 × 1024" />
+                                </ComboBox>
+                            </StackPanel>
+                        </Grid>
+
+                        <Button Content="Отрисовать"
+                                Command="{Binding RenderFractalPreviewCommand}"
+                                IsEnabled="{Binding !IsBusy}"
+                                Classes="accent"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Center"
+                                Padding="10" />
+                    </StackPanel>
+                </Border>
+
+                <Border Background="{DynamicResource SystemRegionBrush}" CornerRadius="8" Padding="12">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Замер времени" FontWeight="SemiBold" FontSize="14" />
+                        <TextBlock Text="Зависимость времени отрисовки от глубины рекурсии:"
+                                   FontSize="12"
+                                   TextWrapping="Wrap"
+                                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+
+                        <Grid ColumnDefinitions="*, *" ColumnSpacing="8">
+                            <StackPanel Grid.Column="0" Spacing="4">
+                                <TextBlock Text="Макс. глубина:" FontSize="12"
+                                           Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                                <NumericUpDown Value="{Binding FractalMaxDepth}"
+                                               Minimum="1"
+                                               Maximum="{Binding FractalAlgorithm.MaxN}"
+                                               Increment="1"
+                                               HorizontalAlignment="Stretch" />
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1" Spacing="4">
+                                <TextBlock Text="Шаг:" FontSize="12"
+                                           Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                                <NumericUpDown Value="{Binding FractalStep}"
+                                               Minimum="1"
+                                               Maximum="3"
+                                               Increment="1"
+                                               HorizontalAlignment="Stretch" />
+                            </StackPanel>
+                        </Grid>
+
+                        <Button Content="Построить график"
+                                Command="{Binding RunFractalBenchmarkCommand}"
+                                IsEnabled="{Binding !IsBusy}"
+                                Classes="accent"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Center"
+                                Padding="10" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Холст предпросмотра. -->
+        <Border Grid.Column="1"
+                Background="{DynamicResource SystemRegionBrush}"
+                CornerRadius="8"
+                Padding="12">
+            <Grid RowDefinitions="*, Auto">
+                <Border Grid.Row="0"
+                        Background="#101624"
+                        CornerRadius="6"
+                        ClipToBounds="True">
+                    <Grid>
+                        <Image Source="{Binding FractalPreview}"
+                               Stretch="Uniform"
+                               Margin="8" />
+                        <TextBlock Text="Фрактал ещё не отрисован"
+                                   IsVisible="{Binding !HasFractalPreview}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontSize="13"
+                                   Foreground="#8090A8" />
+                    </Grid>
+                </Border>
+
+                <TextBlock Grid.Row="1"
+                           Text="{Binding FractalPreviewInfo}"
+                           FontSize="12"
+                           TextWrapping="Wrap"
+                           TextAlignment="Center"
+                           HorizontalAlignment="Center"
+                           Margin="0,8,0,0"
+                           Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

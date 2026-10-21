@@ -1,0 +1,42 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:AlgosLabs.ViewModels"
+             x:Class="AlgosLabs.Views.Sections.PlaceholderSectionView"
+             x:DataType="vm:LabSectionViewModel">
+
+    <!-- Заглушка раздела: только визуальная часть, функциональность появится позже -->
+    <Border Background="{DynamicResource SystemRegionBrush}"
+            CornerRadius="8"
+            Padding="24"
+            Margin="0,12,0,0">
+        <StackPanel VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    MaxWidth="520"
+                    Spacing="10">
+
+            <Border Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
+                    BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                    BorderThickness="1"
+                    CornerRadius="12"
+                    Padding="12,4"
+                    HorizontalAlignment="Center">
+                <TextBlock Text="Раздел в разработке"
+                           FontSize="12"
+                           Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+            </Border>
+
+            <TextBlock Text="{Binding Title}"
+                       FontSize="18"
+                       FontWeight="SemiBold"
+                       TextAlignment="Center"
+                       TextWrapping="Wrap"
+                       HorizontalAlignment="Center" />
+
+            <TextBlock Text="{Binding Description}"
+                       FontSize="13"
+                       TextAlignment="Center"
+                       TextWrapping="Wrap"
+                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+        </StackPanel>
+    </Border>
+</UserControl>

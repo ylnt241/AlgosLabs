@@ -1,0 +1,71 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:AlgosLabs.ViewModels"
+             x:Class="AlgosLabs.Views.Sections.MatrixSectionView"
+             x:DataType="vm:MainViewModel">
+
+    <!-- Раздел «Матрицы». -->
+    <ScrollViewer Margin="0,12,0,0">
+        <StackPanel Spacing="12">
+            <Border Background="{DynamicResource SystemRegionBrush}"
+                    CornerRadius="8" Padding="12">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Параметры строки (Ось N)" FontWeight="SemiBold" FontSize="14" />
+                    <Grid ColumnDefinitions="*, *, *" ColumnSpacing="8">
+                        <StackPanel Grid.Column="0" Spacing="4">
+                            <TextBlock Text="Start N:" FontSize="12"
+                                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                            <NumericUpDown Value="{Binding StartN}" Minimum="10" Increment="10" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Spacing="4">
+                            <TextBlock Text="Max N:" FontSize="12"
+                                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                            <NumericUpDown Value="{Binding MaxN}" Minimum="10" Increment="50" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2" Spacing="4">
+                            <TextBlock Text="Step N:" FontSize="12"
+                                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                            <NumericUpDown Value="{Binding StepN}" Minimum="1" Increment="10" />
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <Border Background="{DynamicResource SystemRegionBrush}"
+                    CornerRadius="8" Padding="12">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Параметры столбцов (Ось M)" FontWeight="SemiBold" FontSize="14" />
+                    <Grid ColumnDefinitions="*, *, *" ColumnSpacing="8">
+                        <StackPanel Grid.Column="0" Spacing="4">
+                            <TextBlock Text="Start M:" FontSize="12"
+                                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                            <NumericUpDown Value="{Binding StartM}" Minimum="10" Increment="10" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Spacing="4">
+                            <TextBlock Text="Max M:" FontSize="12"
+                                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                            <NumericUpDown Value="{Binding MaxM}" Minimum="10" Increment="50" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2" Spacing="4">
+                            <TextBlock Text="Step M:" FontSize="12"
+                                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                            <NumericUpDown Value="{Binding StepM}" Minimum="1" Increment="10" />
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <Button Content="Построить график"
+                    Command="{Binding RunMatrix3DBenchmarkCommand}"
+                    IsEnabled="{Binding !IsBusy}"
+                    Classes="accent"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Padding="10" />
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

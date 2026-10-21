@@ -12,7 +12,7 @@ public class IterativePowerAlgorithm : BasePowerAlgorithm
 
         for (var i = 0; i < data.N; i++)
         {
-            StepCounter++; // Подсчитываем умножение
+            StepCounter++; // одно умножение на итерацию
             result *= data.X;
         }
     }

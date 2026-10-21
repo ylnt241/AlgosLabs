@@ -1,4 +1,4 @@
-using Algorithms.Infrastructure;
+﻿using Algorithms.Infrastructure;
 using AlgosLabs.ViewModels;
 using AlgosLabs.Views;
 using Avalonia;
@@ -29,12 +29,14 @@ public class App : Application
 
     private static void InitializeDatabase()
     {
+        AppDbContext.MigrateLegacyDatabaseIfNeeded();
+
         using var db = new AppDbContext();
 
-        // EnsureCreated создает файл benchmark_cache.db и все таблицы, если их нет
+        // Создаёт файл и таблицы, если их ещё нет.
         db.Database.EnsureCreated();
 
-        // Включаем WAL-режим для максимального ускорения записи/чтения в SQLite
+        // WAL ускоряет запись и не блокирует чтение во время замеров.
         db.Database.ExecuteSqlRaw("PRAGMA journal_mode=WAL;");
     }
 }

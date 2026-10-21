@@ -14,12 +14,11 @@ public class QuickSelectChikishev : IAlgorithm<double[]>, IIndividualAlgorithm
         if (data == null || data.Length == 0)
             return;
 
-        // Делаем копию, чтобы измерения времени на разных прогонах 
-        // проходили на неотсортированных данных
+        // QuickSelect переставляет элементы, поэтому каждый прогон должен получить свежую копию.
         var array = new double[data.Length];
         Array.Copy(data, array, data.Length);
 
-        // Поиск k-й порядковой статистики (по умолчанию — медиана)
+        // k = n/2 — медиана: значение для интерфейса не важно, важен объём работы.
         var k = array.Length / 2;
         QuickSelect(array, 0, array.Length - 1, k, step);
     }
@@ -53,11 +52,10 @@ public class QuickSelectChikishev : IAlgorithm<double[]>, IIndividualAlgorithm
 
     private static int Partition(double[] array, int left, int right, int step)
     {
-        // Выбираем опорный элемент
+        // Опорный элемент — середина отрезка: на случайных данных ведёт себя стабильнее края.
         var pivotIndex = left + (right - left) / 2;
         var pivotValue = array[pivotIndex];
 
-        // Переносим pivot в конец
         (array[pivotIndex], array[right]) = (array[right], array[pivotIndex]);
 
         var storeIndex = left;
@@ -69,7 +67,6 @@ public class QuickSelectChikishev : IAlgorithm<double[]>, IIndividualAlgorithm
                 storeIndex++;
             }
 
-        // Возвращаем pivot на итоговое место
         (array[storeIndex], array[right]) = (array[right], array[storeIndex]);
         return storeIndex;
     }

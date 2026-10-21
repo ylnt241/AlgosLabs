@@ -1,0 +1,132 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:AlgosLabs.Controls"
+             xmlns:vm="using:AlgosLabs.ViewModels"
+             x:Class="AlgosLabs.Views.Sections.HanoiSectionView"
+             x:DataType="vm:HanoiViewModel">
+
+    <!-- Раздел «Ханойские башни»: параметры, управление и визуализация. -->
+    <Grid ColumnDefinitions="320, *" ColumnSpacing="12" Margin="0,12,0,0">
+
+        <ScrollViewer Grid.Column="0">
+            <StackPanel Spacing="12">
+
+                <Border Background="{DynamicResource SystemRegionBrush}" CornerRadius="8" Padding="12">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="Параметры" FontWeight="SemiBold" FontSize="14" />
+
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="Количество дисков (N):" FontSize="12"
+                                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                            <NumericUpDown Value="{Binding HanoiDiskCount}"
+                                           Minimum="1"
+                                           Maximum="20"
+                                           Increment="1"
+                                           HorizontalAlignment="Stretch" />
+                        </StackPanel>
+
+                        <StackPanel Spacing="2">
+                            <Grid ColumnDefinitions="*, Auto" ColumnSpacing="6">
+                                <TextBlock Text="Скорость (% от макс.):" FontSize="12"
+                                           Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding HanoiSpeedText}"
+                                           FontSize="12"
+                                           TextWrapping="Wrap"
+                                           TextAlignment="Right"
+                                           Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                            </Grid>
+                            <Slider Value="{Binding HanoiSpeedPercent}"
+                                    Minimum="1"
+                                    Maximum="100"
+                                    TickFrequency="1"
+                                    IsSnapToTickEnabled="True"
+                                    HorizontalAlignment="Stretch" />
+                            <TextBlock Text="100% — максимум для текущего N: половина всех шагов, но не более 1000 шаг/с."
+                                       FontSize="11"
+                                       TextWrapping="Wrap"
+                                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                        </StackPanel>
+
+                        <TextBlock Text="Стержень A — начальный, C — целевой. Минимум ходов: 2^N − 1."
+                                   FontSize="11"
+                                   TextWrapping="Wrap"
+                                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                    </StackPanel>
+                </Border>
+
+                <Border Background="{DynamicResource SystemRegionBrush}" CornerRadius="8" Padding="12">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="Управление" FontWeight="SemiBold" FontSize="14" />
+
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="{Binding HanoiStepInfo}"
+                                       FontWeight="SemiBold"
+                                       FontSize="13" />
+                            <TextBlock Text="{Binding HanoiMoveInfo}"
+                                       FontSize="12"
+                                       TextWrapping="Wrap"
+                                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                        </StackPanel>
+
+                        <Grid ColumnDefinitions="*, *, *" ColumnSpacing="6">
+                            <Button Grid.Column="0"
+                                    Content="Назад"
+                                    Command="{Binding StepHanoiBackCommand}"
+                                    IsEnabled="{Binding CanHanoiStepBack}"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Center"
+                                    Padding="8,8" />
+
+                            <Button Grid.Column="1"
+                                    Content="{Binding HanoiPlayButtonText}"
+                                    Command="{Binding ToggleHanoiPlayCommand}"
+                                    Classes="accent"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Center"
+                                    Padding="8,8" />
+
+                            <Button Grid.Column="2"
+                                    Content="Вперёд"
+                                    Command="{Binding StepHanoiForwardCommand}"
+                                    IsEnabled="{Binding CanHanoiStepForward}"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Center"
+                                    Padding="8,8" />
+                        </Grid>
+
+                        <Button Content="Сброс"
+                                Command="{Binding ResetHanoiCommand}"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Center"
+                                Padding="8,8" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Стержни и диски. -->
+        <Border Grid.Column="1"
+                Background="{DynamicResource SystemRegionBrush}"
+                CornerRadius="8"
+                Padding="12">
+            <Grid RowDefinitions="*, Auto">
+                <Border Grid.Row="0"
+                        Background="#101624"
+                        CornerRadius="6"
+                        ClipToBounds="True">
+                    <controls:HanoiTowersControl State="{Binding HanoiState}" Margin="8" />
+                </Border>
+
+                <TextBlock Grid.Row="1"
+                           Text="Перекладывайте диски по одному: меньший диск всегда лежит на большем."
+                           FontSize="12"
+                           TextWrapping="Wrap"
+                           TextAlignment="Center"
+                           HorizontalAlignment="Center"
+                           Margin="0,8,0,0"
+                           Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

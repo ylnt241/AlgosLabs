@@ -11,12 +11,12 @@ public class PolynomialNaive : IAlgorithm<double[]>
 
     public void Execute(double[] v, int step)
     {
-        // v содержит коэффициенты многочлена степени n-1:
+        // v — коэффициенты от младшей степени к старшей:
         // P(x) = v_1 + v_2 x + ... + v_n x^(n-1)
         double result = 0;
         for (var k = 1; k <= v.Length; k++)
         {
-            // Наивный способ: вычисляем степень x^(k-1) для каждого члена
+            // В отличие от Горнера, степень считается заново для каждого члена.
             double xPower = 1;
             for (var p = 0; p < k - 1; p++) xPower *= X;
 

@@ -60,6 +60,11 @@ dlldata.c
 # Benchmark Results
 BenchmarkDotNet.Artifacts/
 
+# Local benchmark cache (SQLite)
+benchmark_cache.db
+benchmark_cache.db-shm
+benchmark_cache.db-wal
+
 # .NET
 project.lock.json
 project.fragment.lock.json

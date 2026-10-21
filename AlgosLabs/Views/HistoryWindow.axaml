@@ -12,7 +12,6 @@
                   IsReadOnly="False"
                   Grid.Row="0">
             <DataGrid.Columns>
-                <!-- Сравнить (CheckBox) -->
                 <DataGridTemplateColumn Header="Сравнить">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate x:DataType="services:BenchmarkHistoryGroup">
@@ -23,7 +22,6 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <!-- Время запуска -->
                 <DataGridTemplateColumn Header="Время запуска">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate x:DataType="services:BenchmarkHistoryGroup">
@@ -34,7 +32,6 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <!-- Алгоритм -->
                 <DataGridTemplateColumn Header="Алгоритм">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate x:DataType="services:BenchmarkHistoryGroup">
@@ -45,7 +42,6 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <!-- Max N -->
                 <DataGridTemplateColumn Header="Max N">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate x:DataType="services:BenchmarkHistoryGroup">
@@ -56,7 +52,6 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <!-- Точек -->
                 <DataGridTemplateColumn Header="Точек">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate x:DataType="services:BenchmarkHistoryGroup">

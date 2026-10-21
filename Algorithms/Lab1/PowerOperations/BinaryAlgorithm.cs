@@ -17,12 +17,12 @@ public class BinaryAlgorithm : BasePowerAlgorithm
 
         if (n % 2 == 0)
         {
-            StepCounter++; // Подсчитываем умножение (half * half)
+            StepCounter++; // half * half
             var half = ComputeFast(x, n / 2);
             return half * half;
         }
 
-        StepCounter += 2; // Подсчитываем умножения (x * ...)
+        StepCounter += 2; // x * результат плюс рекурсивный вызов
         return x * ComputeFast(x, n - 1);
     }
 }

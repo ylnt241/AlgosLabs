@@ -17,17 +17,17 @@ public class Timsort : IAlgorithm<double[]>
         int n = data.Length;
         if (n < 2) return;
 
-        // Вычисляем минимальный размер «рана» (run)
+        // Минимальный run из классического Timsort.
         int minRun = GetMinRun(MinRun);
 
-        // 1. Сортируем небольшие блоки с помощью сортировки вставками
+        // Короткие блоки сортируем вставками.
         for (int i = 0; i < n; i += minRun)
         {
             int end = Math.Min(i + minRun - 1, n - 1);
             InsertionSort(data, i, end);
         }
 
-        // 2. Объединяем отсортированные блоки (слияние)
+        // Затем сливаем соседние блоки, каждый раз удваивая размер.
         for (int size = minRun; size < n; size = 2 * size)
         {
             for (int left = 0; left < n; left += 2 * size)

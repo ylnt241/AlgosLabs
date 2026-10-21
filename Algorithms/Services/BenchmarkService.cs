@@ -10,7 +10,7 @@ public record BenchmarkResultPoint(int N, double AverageTimeMs);
 public class UniversalBenchmarkService
 {
     /// <summary>
-    ///     Динамический запуск любого алгоритма через Reflection
+    ///     Прогоняет алгоритм, тип данных которого становится известен только в рантайме.
     /// </summary>
     public async Task<List<BenchmarkResultPoint>> RunDynamicBenchmark(
         IAlgorithm algorithm,
@@ -18,7 +18,7 @@ public class UniversalBenchmarkService
         int stepN,
         int algorithmStep)
     {
-        // 1. Ищем интерфейс IAlgorithm<TData>
+        // IAlgorithm<T> приходится искать рефлексией: конкретный T здесь неизвестен.
         var interfaceType = Array.Find(algorithm.GetType().GetInterfaces(),
             i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IAlgorithm<>));
 
@@ -27,26 +27,25 @@ public class UniversalBenchmarkService
 
         var dataType = interfaceType.GetGenericArguments()[0];
 
-        // 2. Находим универсальный метод RunBenchmarkAsync<TData>
+        // Подставляем найденный тип в обобщённый метод и вызываем его.
         var method = typeof(UniversalBenchmarkService)
             .GetMethod(nameof(RunBenchmarkAsync))!
             .MakeGenericMethod(dataType);
 
-        // 3. Вызываем с 5 параметрами
         var task = (Task<List<BenchmarkResultPoint>>)method.Invoke(this, new object?[]
         {
             algorithm,
             maxN,
             stepN,
             algorithmStep,
-            null // progress
+            null // прогресс в этом сценарии не нужен
         })!;
 
         return await task;
     }
 
     /// <summary>
-    ///     Основной универсальный замер
+    ///     Замер по сетке N с кэшированием уже посчитанных точек.
     /// </summary>
     public async Task<List<BenchmarkResultPoint>> RunBenchmarkAsync<TData>(
         IAlgorithm<TData> algorithm,
@@ -65,7 +64,7 @@ public class UniversalBenchmarkService
         {
             var cacheKey = $"{algorithm.Id}_{typeof(TData).Name}_N{n}_Step{algorithmStep}";
 
-            // 1. Проверяем кэш в SQLite
+            // Сначала смотрим в кэш, чтобы не мерить одно и то же повторно.
             var averageMs = await GetFromCacheAsync(cacheKey)
                             ?? await MeasureAndSaveAsync(algorithm, cacheKey, n, algorithmStep);
 
@@ -82,18 +81,17 @@ public class UniversalBenchmarkService
     {
         try
         {
-            // Генерация минимального набора данных и 3-5 холостых прогонов
+            // Холостые прогоны, чтобы JIT не попал в первый замер.
             var warmupData = algorithm.Generate(10);
             for (var i = 0; i < 5; i++) algorithm.Execute(warmupData, algorithmStep);
 
-            // Очищаем мусор после прогрева
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
         }
         catch
         {
-            // Игнорируем возможные ошибки прогрева
+            // Прогрев не должен ломать основной запуск.
         }
     }
 
@@ -112,15 +110,16 @@ public class UniversalBenchmarkService
     {
         var generateMethod = algorithm.GetType().GetMethod("Generate", new[] { typeof(int) });
 
-        // Количество итераций для сглаживания системного шума
+        // Несколько итераций внутри одного замера сглаживают шум ОС.
         var innerLoops = 5;
         var runs = new double[5];
 
         for (var run = 0; run < 5; run++)
         {
-// Вызываем Generate(n) с текущим N, либо дефолтный Generate()
+            // Вход готовим под текущий N.
             var inputData = algorithm.Generate(n);
-// Прогрев JIT (Warmup)
+
+            // Мусор убираем до секундомера, иначе он попадёт в измерение.
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
