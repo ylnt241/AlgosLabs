@@ -3,7 +3,7 @@
              x:Class="AlgosLabs.App"
              xmlns:local="using:AlgosLabs"
              RequestedThemeVariant="Default">
-    <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+    <!-- Тема следует системной; можно зафиксировать Light или Dark. -->
 
     <Application.DataTemplates>
         <local:ViewLocator />

@@ -1,6 +1,6 @@
 namespace Algorithms.Interfaces;
 
-// 1. Необобщенный базовый интерфейс для UI (MainWindowViewModel / ScottPlot)
+// Общая часть: по ней UI строит списки и подписи, не зная типа данных.
 public interface IAlgorithm
 {
     string Id { get; }
@@ -8,7 +8,7 @@ public interface IAlgorithm
     int MaxN { get; }
 }
 
-// 2. Обобщенный интерфейс с генерацией и выполнением
+// Типизированная часть: генерация входных данных и сам замер.
 public interface IAlgorithm<TData> : IAlgorithm
 {
     void Execute(TData data, int step);

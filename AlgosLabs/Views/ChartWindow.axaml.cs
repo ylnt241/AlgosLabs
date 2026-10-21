@@ -19,38 +19,39 @@ public partial class ChartWindow : Window
     {
         base.OnDataContextChanged(e);
 
-        if (DataContext is ChartWindowViewModel vm) PlotData(vm.ChartData);
+        if (DataContext is ChartWindowViewModel vm) PlotData(vm);
     }
 
-    private void PlotData(ChartDataModel data)
+    private void PlotData(ChartWindowViewModel vm)
     {
+        var data = vm.ChartData;
         var plotControl = this.FindControl<AvaPlot>("MyPlot");
         if (plotControl == null) return;
 
         plotControl.Plot.Clear();
         plotControl.Plot.Legend.ManualItems.Clear();
 
-        // 1. Выбираем палитру цветов ScottPlot (например, Category10)
+        // Цвет серии выбираем по индексу: эмпирика и теория должны совпадать.
         var palette = new Category10();
 
         for (var i = 0; i < data.SeriesList.Count; i++)
         {
             var series = data.SeriesList[i];
-
-            // 2. Получаем динамический цвет для текущей серии по индексу
             var seriesColor = palette.GetColor(i);
 
-            // --- Эмпирические данные ---
+            // Измеренные точки.
             var xs = series.Points.Select(p => (double)p.N).ToArray();
             var ys = series.Points.Select(p => p.AverageTimeMs).ToArray();
 
             var empiricalScatter = plotControl.Plot.Add.Scatter(xs, ys);
-            empiricalScatter.LegendText = $"{series.AlgorithmName} (Эмпирические)";
+            empiricalScatter.LegendText = series.Approximation == null
+                ? series.AlgorithmName
+                : $"{series.AlgorithmName} (Эмпирические)";
             empiricalScatter.LineWidth = 2;
             empiricalScatter.MarkerSize = 6;
-            empiricalScatter.Color = seriesColor; // Применяем динамический цвет
+            empiricalScatter.Color = seriesColor;
 
-            // --- Теоретическая кривая ---
+            // Теоретическая кривая — тем же цветом, но пунктиром.
             if (series.Approximation != null)
             {
                 var approx = series.Approximation;
@@ -61,14 +62,14 @@ public partial class ChartWindow : Window
                 approxScatter.LegendText = $"{series.AlgorithmName} (Теория: C={approx.C:E2}, MSE={approx.Mse:E4})";
                 approxScatter.LineWidth = 2.5f;
                 approxScatter.LineStyle.Pattern = LinePattern.Dashed;
-                approxScatter.Color = seriesColor; // Применяем ТТОТ ЖЕ динамический цвет
+                approxScatter.Color = seriesColor;
                 approxScatter.MarkerSize = 0;
             }
         }
 
-        plotControl.Plot.Title("Эмпирические данные vs Аппроксимация T_approx(n) = C·f(n)");
-        plotControl.Plot.XLabel("Размерность данных (N)");
-        plotControl.Plot.YLabel("Время выполнения (мс)");
+        plotControl.Plot.Title(vm.Title);
+        plotControl.Plot.XLabel(vm.XLabel);
+        plotControl.Plot.YLabel(vm.YLabel);
         plotControl.Plot.ShowLegend();
 
         plotControl.Refresh();

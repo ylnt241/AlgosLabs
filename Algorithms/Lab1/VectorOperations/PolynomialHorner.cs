@@ -11,9 +11,8 @@ public class PolynomialHorner : IAlgorithm<double[]>
 
     public void Execute(double[] v, int step)
     {
-        // v содержит коэффициенты многочлена степени n-1.
-        // Метод Горнера:
-        // P(x) = v_1 + x(v_2 + x(v_3 + ... + x * v_n))
+        // v — коэффициенты от младшей степени к старшей.
+        // Горнер: P(x) = v_1 + x(v_2 + x(v_3 + ... + x * v_n))
         var result = v[^1];
         for (var k = v.Length - 2; k >= 0; k--) result = result * X + v[k];
 

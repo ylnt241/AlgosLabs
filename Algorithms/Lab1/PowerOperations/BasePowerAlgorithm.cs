@@ -4,7 +4,7 @@ namespace Algorithms.Lab1.PowerOperations;
 
 public abstract class BasePowerAlgorithm : IAlgorithm<PowerData>, IPowerAlgorithm
 {
-    // В свойство StepCounter накапливаем количество элементарных операций
+    // Счётчик элементарных операций; обнуляется в начале Execute.
     public long StepCounter { get; protected set; }
     public abstract string Id { get; }
     public abstract string Name { get; }

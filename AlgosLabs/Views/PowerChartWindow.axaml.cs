@@ -38,7 +38,7 @@ public partial class PowerChartWindow : Window
             }
             else
             {
-                // Быстрый бинарный или другие алгоритмы
+                // Остальные алгоритмы — тонкой зелёной линией.
                 scatter.LineWidth = 2;
                 scatter.LinePattern = LinePattern.Solid;
                 scatter.Color = Colors.Green;

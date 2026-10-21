@@ -7,7 +7,7 @@ using Avalonia.Controls.Templates;
 namespace AlgosLabs;
 
 /// <summary>
-///     Given a view model, returns the corresponding view if possible.
+///     Находит представление по имени ViewModel.
 /// </summary>
 [RequiresUnreferencedCode(
     "Default implementation of ViewLocator involves reflection which may be trimmed away.",

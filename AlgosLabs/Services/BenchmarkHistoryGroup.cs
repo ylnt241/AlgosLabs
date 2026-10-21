@@ -17,7 +17,7 @@ public class BenchmarkHistoryGroup
 
     public bool IsSelected { get; set; }
 
-    // Список всех точек этого прогона
+    // Точки, попавшие в этот запуск.
     public List<BenchmarkCacheEntity> Points { get; set; } = new();
 }
 
@@ -30,19 +30,17 @@ public class HistoryService
     {
         using var db = new AppDbContext();
 
-        // 1. Получаем все записи из кэша БД
+        // Забираем всё, что накопилось в кэше.
         var entries = await db.CacheEntries
             .OrderByDescending(x => x.CreatedAt)
             .ToListAsync();
 
-        // 2. Группируем записи по AlgorithmId и дате/времени (округляем до минуты/секунды)
-        // Чтобы объединить точки одного запуска N = 10..MaxN в одну группу
+        // Точки одного запуска пишутся подряд, поэтому группируем по алгоритму, шагу и минуте.
         var grouped = entries
             .GroupBy(x => new
             {
                 x.AlgorithmId,
                 x.Step,
-                // Группируем по минуте запуска, чтобы точки одного теста попали в одну группу
                 Timestamp = new DateTime(x.CreatedAt.Year, x.CreatedAt.Month, x.CreatedAt.Day, x.CreatedAt.Hour,
                     x.CreatedAt.Minute, 0)
             })

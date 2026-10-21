@@ -27,7 +27,7 @@ public class QuickSort : IAlgorithm<double[]>
         {
             var pivotIndex = Partition(arr, low, high);
 
-            // Сначала сортируем меньшую часть (уменьшаем глубину рекурсии)
+            // Сначала меньшая часть — так глубина рекурсии остаётся логарифмической.
             if (pivotIndex - low < high - pivotIndex)
             {
                 QuickSortCore(arr, low, pivotIndex - 1);
@@ -43,7 +43,7 @@ public class QuickSort : IAlgorithm<double[]>
 
     private static int Partition(double[] arr, int low, int high)
     {
-        // Опорный элемент — последний (схема Ломуто)
+        // Опорный — последний элемент, схема Ломуто.
         var pivot = arr[high];
         var i = low - 1;
 

@@ -1,0 +1,70 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:AlgosLabs.ViewModels"
+             x:Class="AlgosLabs.Views.Sections.VectorOperationsSectionView"
+             x:DataType="vm:MainViewModel">
+
+    <!-- Раздел «Векторные операции». -->
+    <Grid RowDefinitions="Auto, *, Auto" Margin="0,12,0,0">
+
+        <Border Grid.Row="0"
+                Background="{DynamicResource SystemRegionBrush}"
+                Theme="{StaticResource CardBorderTheme}"
+                CornerRadius="8" Padding="12" Margin="0,0,0,12">
+            <StackPanel Spacing="8">
+                <TextBlock Text="Параметры входных данных" FontWeight="SemiBold" FontSize="14" />
+
+                <Grid ColumnDefinitions="*, *" RowDefinitions="Auto" Margin="0,4,0,0">
+                    <StackPanel Grid.Column="0" Margin="0,0,6,0" Spacing="4">
+                        <TextBlock Text="Max N:" FontSize="12"
+                                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                        <NumericUpDown Value="{Binding MaxN}" Minimum="10" Maximum="1000000"
+                                       Increment="500" HorizontalAlignment="Stretch" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Margin="6,0,0,0" Spacing="4">
+                        <TextBlock Text="Шаг N:" FontSize="12"
+                                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                        <NumericUpDown Value="{Binding StepN}" Minimum="1" Maximum="10000" Increment="50"
+                                       HorizontalAlignment="Stretch" />
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="1"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,0,0,12">
+            <DockPanel>
+                <TextBlock Text="Выберите алгоритмы для сравнения:"
+                           DockPanel.Dock="Top"
+                           FontWeight="SemiBold"
+                           Margin="0,0,0,8" />
+
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+                    <ItemsControl ItemsSource="{Binding AvailableAlgorithms}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:AlgorithmSelectionViewModel">
+                                <Border CornerRadius="4" Padding="6,4" Margin="0,2"
+                                        Background="{DynamicResource SystemControlBackgroundAltHighBrush}">
+                                    <CheckBox IsChecked="{Binding IsSelected}"
+                                              Content="{Binding Algorithm.Name}"
+                                              HorizontalAlignment="Stretch" />
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </DockPanel>
+        </Border>
+
+        <Button Grid.Row="2"
+                Command="{Binding RunVectorComparisonCommand}"
+                Content="Построить графики"
+                Classes="accent"
+                IsEnabled="{Binding !IsBusy}"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Center"
+                Padding="10" />
+    </Grid>
+</UserControl>

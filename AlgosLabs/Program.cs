@@ -5,9 +5,8 @@ namespace AlgosLabs;
 
 internal sealed class Program
 {
-    // Initialization code. Don't use any Avalonia, third-party APIs or any
-    // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
-    // yet and stuff might break.
+    // До запуска AppMain нельзя трогать Avalonia и SynchronizationContext:
+    // платформа ещё не инициализирована.
     [STAThread]
     public static void Main(string[] args)
     {
@@ -15,7 +14,7 @@ internal sealed class Program
             .StartWithClassicDesktopLifetime(args);
     }
 
-    // Avalonia configuration, don't remove; also used by visual designer.
+    // Этот метод нужен ещё и визуальному дизайнеру — не удалять.
     public static AppBuilder BuildAvaloniaApp()
         => AppBuilder.Configure<App>()
             .UsePlatformDetect()

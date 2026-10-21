@@ -11,19 +11,17 @@ public class JumpSearch : IAlgorithm<double[]>, IIndividualAlgorithm
 
     public void Execute(double[] v, int step)
     {
-        // Клонируем массив, чтобы не модифицировать оригинал
+        // Сортируем копию: исходный массив трогать нельзя.
         var data = (double[])v.Clone();
 
-        // Сортируем массив (Jump Search работает только на отсортированных данных)
         Array.Sort(data);
 
-        // Ищем медиану (элемент в середине массива)
+        // Медиана заведомо есть в массиве — удобная цель для проверки поиска.
         var target = data[data.Length / 2];
 
-        // Выполняем поиск
         var resultIndex = JumpSearchCore(data, target);
 
-        // Результат не возвращается, так как интерфейс предназначен для замера времени
+        // Результат нужен только для того, чтобы компилятор не выбросил поиск.
         var output = resultIndex;
     }
 
@@ -32,11 +30,10 @@ public class JumpSearch : IAlgorithm<double[]>, IIndividualAlgorithm
         int n = arr.Length;
         if (n == 0) return -1;
 
-        // Оптимальный размер шага = √n
+        // Классический Jump Search: шаг √n, затем линейный проход внутри блока.
         int jumpStep = (int)Math.Floor(Math.Sqrt(n));
         int prev = 0;
 
-        // Прыгаем по массиву, пока не найдем блок, где может быть целевой элемент
         while (arr[Math.Min(jumpStep, n) - 1] < target)
         {
             prev = jumpStep;
@@ -44,14 +41,12 @@ public class JumpSearch : IAlgorithm<double[]>, IIndividualAlgorithm
             if (prev >= n) return -1;
         }
 
-        // Линейный поиск в найденном блоке
         while (arr[prev] < target)
         {
             prev++;
             if (prev == Math.Min(jumpStep, n)) return -1;
         }
 
-        // Проверяем, нашли ли мы целевой элемент
         if (arr[prev] == target) return prev;
 
         return -1;
